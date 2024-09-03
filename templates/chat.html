@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brite Chatbot</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            position: relative;
+            min-height: 70vh;
+            margin-bottom: 100px; /* Adjust to leave space for the footer */
+            background: -moz-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);
+	        background: -webkit-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        h1 {
+            color: #ffffff;
+            position: fixed; /* Set the position to fixed */
+            top: 0; /* Align the h1 element to the top of the viewport */
+            width: 100%; /* Make the h1 element span the full width of the viewport */
+            background: -moz-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);
+	        background: -webkit-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);
+            padding: 10px 0; /* Add padding for better readability */
+            z-index: 1000;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: transparent;
+            padding:20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        #chat-card{
+            background: transparent; 
+            border-width: 2px ; 
+            border-color: rgba(255, 255, 255, 0.395);
+            min-height: 60vh; 
+            max-width: 500vb;
+            margin-top: 100px;
+        }
+        #spacer{
+            height: 50px;
+        }
+        #question{
+            max-height: 400px;
+            background-color: #183850;
+            opacity: 1;
+           color:rgb(255, 255, 255);
+        }
+        #response-container{
+            background-color: rgba(25,147,147,0.2);
+            max-width: 700px;
+            position: relative;
+            clear: both;
+            display: inline-block;
+            padding: 16px 40px 16px 20px;
+            margin: 0 0 20px 0;
+            font: 16px/20px 'Noto Sans', sans-serif;
+            border-radius: 10px;
+            
+        }
+        .form-group {
+            width: calc(100% - 40px); /* Adjust to leave space for the button */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px; /* Adjust spacing */
+        }
+        .form-group label {
+            margin-bottom: 0; /* Remove default margin */
+        }
+        .form-group input {
+            flex-grow: 1;
+            margin-right: 10px; /* Adjust spacing */
+            height: 100px;
+        }
+        .form-group button {
+            width: 100px; /* Adjust button width */
+        }
+
+        ::placeholder{
+            color: rgb(255, 255, 255) !important;
+            opacity: 1;
+        }
+
+        .card-body div {
+            position: relative;
+            clear: both;
+            display: inline-block;
+            padding: 16px 40px 16px 20px;
+            margin: 0 0 20px 0;
+            font: 16px/20px 'Noto Sans', sans-serif;
+            border-radius: 10px;
+            background-color: rgba(25,147,147,0.2);
+        }
+
+        /* Chat - Avatar */
+        .card-body div:before {
+            position: absolute;
+            top: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: 50px;
+            content: '';
+        }
+
+        /* Chat - Speech Bubble Arrow */
+        .card-body div:after {
+            position: absolute;
+            top: 15px;
+            content: '';
+            width: 0;
+            height: 0;
+            border-top: 15px solid rgba(25,147,147,0.2);
+        }
+
+        .card-body div:nth-child(odd) {
+            animation: show-chat-odd 0.15s 1 ease-in;
+            -moz-animation: show-chat-odd 0.15s 1 ease-in;
+            -webkit-animation: show-chat-odd 0.15s 1 ease-in;
+            float: right;
+            margin-right: 80px;
+            color: #0ff4dd;
+        }
+
+        .card-body div:nth-child(odd):before {
+            right: -80px;
+        /* // Placeholder avatar 1 */
+            /* background-image: url('') */
+        }
+        .card-body div:nth-child(odd):after {
+            border-right: 15px solid transparent;
+            right: -15px;
+        }
+
+        .card-body div:nth-child(even) {
+            animation: show-chat-even 0.15s 1 ease-in;
+            -moz-animation: show-chat-even 0.15s 1 ease-in;
+            -webkit-animation: show-chat-even 0.15s 1 ease-in;
+            float: left;
+            margin-left: 80px;
+            color: #25ffa4;
+        }
+
+        .card-body div:nth-child(even):before {
+            left: -80px;
+        /* // Placeholder avatar 2 */
+            /* background-image: url('') */
+        }
+
+        .card-body div:nth-child(even):after {
+            border-left: 15px solid transparent;
+            left: -15px;
+        }
+        .button-submit {
+            background-color: #5aff97;
+            border-radius: 10px;
+            box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+            color: rgb(0, 96, 8);
+            cursor: pointer;
+            display: inline-block;
+            font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+            padding: 7px 15px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 250ms;
+            border: 0;
+            font-size: 16px;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .button-submit:hover {
+            box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+            transform: scale(1.05);
+        }
+
+
+
+
+        .lds-dual-ring {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+        }
+        .lds-dual-ring:after {
+            content: " ";
+            display: block;
+            width: 40px;
+            height: 40px;
+            margin: 18px 0 0 0;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            border-color: #fff transparent #fff transparent;
+            animation: lds-dual-ring 1s linear infinite;
+        }
+        @keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+            }
+        100% {
+            transform: rotate(360deg);
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        
+        <h1 class="mb-4" >Brite Chat Interface</h1>
+
+        <!-- Display conversation history -->
+        <div class="card mb-3" id= "chat-card">
+            <div class="loader"> 
+            <div class="card-body">
+                {% for message in history %}
+                    {% if message[0] == 'User' %}
+                    <div class="chat-text" id="response-container" style="float:right; margin-left: 50%; color:  #0AD5C1"><strong>You:</strong> {{ message[1]}}</div>
+                    
+                    {% else %}
+                    <div class="chat-text" id="response-container"style="float:left; margin-right: 50%; color:  #0EC879;"><strong>Brite AI:</strong> {{ message[1]}}</div>
+                        
+                    {% endif %}
+                {% endfor %}
+            </div>
+            </div> 
+        </div>
+
+    </div>
+    <div id="spacer"></div>
+    <!-- Chat form -->
+    <div class="footer">
+        <div class="container">
+            <form action="/load" method="post" onsubmit="disableSubmitButton()">
+                <div class="form-group">
+                    {% block content %}
+                    <div class="lds-dual-ring" style="opacity: 0;"></div>
+                    <label for="question" style="margin-right: 10px; color: #ffffff;">Question:</label>
+                    <textarea class="form-control" id="question" name="question" rows="3" placeholder="Ask your question..." autofocus="autofocus" oninput="autoResize(this)" required></textarea>
+                    <button type="submit" id="submitBtn" class="button-submit" style="margin-left: 5px;" onclick="$('#loading').show();">Submit</button>
+                    <a href="/new" class="button-submit" style="margin-left: 5px; color: #183850; background-color: aqua; text-decoration : none;">Reset</a>
+                    <!-- <button type="submit" class="btn  btn-outline-danger" style="margin-left: 5px;">Incorrect</button> -->
+                    {% endblock content %}
+                </div>
+            </form>
+        </div>
+    </div>
+    {%block script %}
+    <script>
+
+       function scrollToBottom() {
+            window.scrollTo(0, document.body.scrollHeight);
+            
+        }
+        history.scrollRestoration = "manual";
+        window.onload = scrollToBottom;
+
+        document.addEventListener("keydown",
+            function(event){
+                if(event.key == "Enter"  && !event.shiftKey){
+                    event.preventDefault();
+                    document.getElementById('submitBtn').click();
+                    
+                }
+            }
+        );
+        
+
+        function autoResize(textarea) {
+        textarea.style.height = 'auto'; // Reset height to auto to calculate correct scrollHeight
+        textarea.style.height = (textarea.scrollHeight) + 'px'; // Set height based on content
+        }
+        function disableSubmitButton() {
+            
+            document.getElementById("submitBtn").disabled = true; // Disable the submit button
+            // document.getElementsByClassName("lds-dual-ring").disabled = true;
+        
+        }
+        
+
+    </script>
+    {%endblock script%}
+
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+
+
+{% extends "chat.html" %}
+
+{%block content %}
+    <div class="lds-dual-ring" style="opacity: 1;"></div>
+    <label for="question" style="margin-right: 10px; color: #ffffff;">Question:</label>
+
+    <textarea class="form-control" id="question" name="question" rows="3" placeholder="Loading..." oninput="autoResize(this)" required></textarea>
+    <button type="submit" id="submitBtn" class="btn  btn-outline-success" style="margin-left: 5px; border-radius: 10px;" disabled>Submit</button>
+    <button class="btn  btn-outline-primary" style="margin-left: 5px; border-radius: 10px;" disabled>Reset</button>
+    <!-- <button type="submit" class="btn  btn-outline-danger" style="margin-left: 5px;" disabled>Incorrect</button> -->
+                    
+{% endblock %}
+
+{%block script %}
+    <script>
+        function scrollToBottom() {
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+        history.scrollRestoration = "manual";
+        window.onload = scrollToBottom;
+
+        document.getElementById("question").disabled = true;
+
+        function navigate() {
+            window.location.href = 'chat';  // Redirects user to the /map route when 'create_map' is finished
+        }   
+
+        fetch('process_form').then(navigate); // Performing 'create_map' and then calls navigate() function, declared above
+
+
+    </script>
+{%endblock %}
+
+
